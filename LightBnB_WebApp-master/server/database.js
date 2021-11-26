@@ -72,11 +72,8 @@ const addUser =  function(user) {
   users[userId] = user;
   pool 
   .query(`INSERT INTO users (name, email, password)
-  VALUES($2, $3, $4); `, [user.name, user.email, user.password ])
-  .then((result) => {
-    // console.log("==============", result.rows.length);
-    result.rows
-  })
+  VALUES($1, $2, $3); `, [user.name, user.email, user.password ])
+  .then((result) => {result.rows})
   .catch((err) => {
     console.log(err.message);
   });
@@ -170,6 +167,16 @@ const addProperty = function(property) {
   const propertyId = Object.keys(properties).length + 1;
   property.id = propertyId;
   properties[propertyId] = property;
+  pool 
+  .query(`INSERT INTO properties (owner_id, title, description, thumbnail_photo_url, cover_photo_url, cost_per_night, parking_spaces, number_of_bathrooms, number_of_bedrooms, country, street, city, province, post_code, active)
+  VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14); `, 
+  [properties.owner_id, properties.title, properties.description,properties.thumbnail_photo_url, properties.cover_photo_url, properties.cost_per_night,properties.parking_spaces, properties.number_of_bathrooms, properties.number_of_bedrooms, properties.country, properties.street, properties.city, properties.province, properties.post_code, properties.active])
+  .then((result) => {
+    result.rows
+  })
+  .catch((err) => {
+    console.log(err.message);
+  });
   return Promise.resolve(property);
 }
 exports.addProperty = addProperty;
